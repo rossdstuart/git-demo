@@ -40,6 +40,4 @@ jobs:
     ### End Boilerplate
     - name: Validate HTML Code
       run: | 
-        find / -name html_lint.py 2>/dev/null
-        sudo ls -l /home/runner/.local/bin/html_lint.py
-        /home/runner/.local/bin/html_lint.py *.html
+        /home/runner/.local/bin/html_lint.py --disable=optional_tag *.html
