@@ -1,7 +1,8 @@
-name: Deploy Website
+name: HTML Lint
 on:
   pull_request:
     paths:
+    - '.github/workflows/html.lint.yaml'
     - '*.html'
 
 jobs:
@@ -19,10 +20,10 @@ jobs:
     - name: Install Dependencies with Apt Get
       run: |
         sudo apt-get update
-        sudo apt-get install python3.8 jq -y
+        sudo apt-get install python3.6 python3-setuptools jq -y
     - name: Install Pip Dependencies
       run: |
-        pip3 install html-linter
+        pip install html-linter
     ### Bollerplate Code ###
     - name: Extract branch name from commit
       if: github.event_name != 'pull_request'
@@ -39,4 +40,4 @@ jobs:
     ### End Boilerplate
     - name: Validate HTML Code
       run: | 
-        html_lint.py *.html
+        /home/runner/.local/bin/html_lint.py --disable=optional_tag *.html
