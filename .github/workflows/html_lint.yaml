@@ -1,9 +1,11 @@
 name: Deploy Website
 on:
-  push:
+  pull_request:
+    paths:
+    - '*.html'
 
 jobs:
-  deploy:
+  html_lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -11,6 +13,17 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
+    # - name: Manually Set Global ENVs
+    #   run: |
+    #     echo 'process.env.CI=false' >> $GITHUB_ENV
+    - name: Install Dependencies with Apt Get
+      run: |
+        sudo apt-get update
+        sudo apt-get install python3.8 jq -y
+    - name: Install Pip Dependencies
+      run: |
+        pip3 install html-linter
+    ### Bollerplate Code ###
     - name: Extract branch name from commit
       if: github.event_name != 'pull_request'
       shell: bash
@@ -23,12 +36,7 @@ jobs:
       run: echo 'The branch name is' $BRANCH_NAME
     - name: Manually Load Environment File
       run: cat env.demo >> $GITHUB_ENV
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.SECRET_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-    - name: Deploy site build to S3 bucket
+    ### End Boilerplate
+    - name: Validate HTML Code
       run: | 
-        aws s3 cp *.html s3://${S3_BUCKET}/${BRANCH_NAME}/
+        html_lint.py *.html
