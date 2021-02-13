@@ -1,7 +1,6 @@
 name: Deploy Website
 on:
   push:
-    # branches: [demo, uat, dev]
 
 jobs:
   deploy:
@@ -30,8 +29,8 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.SECRET_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
     - name: Deploy site build to S3 bucket
       run: | 
